@@ -5,48 +5,49 @@ import { required, nonEmpty, numeric, length5 } from '../validators';
 
 export class ContactForm extends React.Component {
     onSubmit(values) {
-        return fetch('/api/messages', {
+        return fetch('https://us-central1-delivery-form-api.cloudfunctions.net/api/report', {
             method: 'POST',
             body: JSON.stringify(values),
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-            .then(res => {
-                if (!res.ok) {
-                    if (
-                        res.headers.has('content-type') &&
-                        res.headers
-                            .get('content-type')
-                            .startsWith('application/json')
-                    ) {
-                        // It's a nice JSON error returned by us, so decode it
-                        return res.json().then(err => Promise.reject(err));
-                    }
-                    // It's a less informative error returned by express
-                    return Promise.reject({
-                        code: res.status,
-                        message: res.statusText
-                    });
-                }
-                return;
-            })
-            .then(() => console.log('Submitted with values', values))
+            // .then(res => {
+            //     if (!res.ok) {
+            //         if (
+            //             res.headers.has('content-type') &&
+            //             res.headers
+            //                 .get('content-type')
+            //                 .startsWith('application/json')
+            //         ) {
+            //             // It's a nice JSON error returned by us, so decode it
+            //             return res.json().then(err => Promise.reject(err));
+            //         }
+            //         // It's a less informative error returned by express
+            //         return Promise.reject({
+            //             code: res.status,
+            //             message: res.statusText
+            //         });
+            //     }
+            //     return;
+            // })
+            .then((resss) => console.log('Submitted with values', resss))
             .catch(err => {
-                const { reason, message, location } = err;
-                if (reason === 'ValidationError') {
-                    // Convert ValidationErrors into SubmissionErrors for Redux Form
-                    return Promise.reject(
-                        new SubmissionError({
-                            [location]: message
-                        })
-                    );
-                }
-                return Promise.reject(
-                    new SubmissionError({
-                        _error: 'Error submitting message'
-                    })
-                );
+                console.log('errrrrrrrr', err)
+                // const { reason, message, location } = err;
+                // if (reason === 'ValidationError') {
+                //     // Convert ValidationErrors into SubmissionErrors for Redux Form
+                //     return Promise.reject(
+                //         new SubmissionError({
+                //             [location]: message
+                //         })
+                //     );
+                // }
+                // return Promise.reject(
+                //     new SubmissionError({
+                //         _error: 'Error submitting message'
+                //     })
+                // );
             });
     }
 
@@ -78,15 +79,17 @@ export class ContactForm extends React.Component {
                 </h2>
                 </header>
                 <form
-                    onSubmit={this.props.handleSubmit(values =>
+                    onSubmit={this.props.handleSubmit(values => {
+                        console.log("onhandler = ", values)
                         this.onSubmit(values)
+                    }
                     )}>
                     {successMessage}
                     {errorMessage}
                     <Field
                         name="tracking-number"
                         type="text"
-                        component="input"
+                        component={Input}
                         label="Tracking number"
                         validate={[required, nonEmpty, numeric, length5]}
                     />
