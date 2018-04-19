@@ -6,7 +6,8 @@ body {
 
 label {
     display: block;
-    margin: 6px;
+    margin-bottom: -5px;
+    margin-top: 20px;
 }
 
 input, textarea, button {
