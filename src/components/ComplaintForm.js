@@ -80,14 +80,14 @@ export class ContactForm extends React.Component {
                 </header>
                 <form
                     onSubmit={this.props.handleSubmit(values => {
-                        console.log("onhandler = ", values)
+                        console.log("onSubmit values = ", values)
                         this.onSubmit(values)
                     }
                     )}>
                     {successMessage}
                     {errorMessage}
                     <Field
-                        name="tracking-number"
+                        name="trackingNumber"
                         type="text"
                         component={Input}
                         label="Tracking number"
